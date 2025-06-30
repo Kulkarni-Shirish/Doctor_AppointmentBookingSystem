@@ -18,7 +18,7 @@ public class ConfirmPaymentServlet extends HttpServlet {
             return;
         }
 
-        // Get session attributes set during booking
+        
         String userEmail = (String) session.getAttribute("pendingUserEmail");
         String doctorEmail = (String) session.getAttribute("pendingDoctorEmail");
         String appointmentDate = (String) session.getAttribute("pendingDate");
@@ -36,7 +36,7 @@ public class ConfirmPaymentServlet extends HttpServlet {
             Connection conn = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/appointment_db", "root", "tiger");
 
-            // ✅ Update status to 'confirmed' if appointment exists
+            
             PreparedStatement stmt = conn.prepareStatement(
                 "UPDATE appointments SET status = 'confirmed' WHERE doctor_email = ? AND user_email = ? AND appointment_date = ? AND appointment_time = ?"
             );
@@ -65,7 +65,7 @@ public class ConfirmPaymentServlet extends HttpServlet {
             request.setAttribute("error", "❌ Something went wrong while confirming payment.");
         }
 
-        // ✅ Show message on patient dashboard
+        
         RequestDispatcher rd = request.getRequestDispatcher("patientDashboard.jsp");
         rd.forward(request, response);
     }
