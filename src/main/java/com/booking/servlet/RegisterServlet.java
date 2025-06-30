@@ -16,7 +16,7 @@ public class RegisterServlet extends HttpServlet {
         String password = request.getParameter("password");
         String role = request.getParameter("role");
 
-        // ✅ Enforce role to be only 'patient'
+        //  Enforce role to be only 'patient'
         if (!"patient".equalsIgnoreCase(role)) {
             request.setAttribute("msg", "❌ Invalid role selection.");
             RequestDispatcher rd = request.getRequestDispatcher("register.jsp");
