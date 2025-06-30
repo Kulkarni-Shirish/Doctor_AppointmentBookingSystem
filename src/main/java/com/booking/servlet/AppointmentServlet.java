@@ -12,12 +12,12 @@ public class AppointmentServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Get form values
+        
         String doctorEmail = request.getParameter("doctorEmail");
         String date = request.getParameter("appointmentDate");
         String time = request.getParameter("appointmentTime");
 
-        // ✅ Get logged-in user's email from session
+        
         HttpSession session = request.getSession();
         String userEmail = (String) session.getAttribute("userEmail");
 
@@ -33,7 +33,7 @@ public class AppointmentServlet extends HttpServlet {
             Connection conn = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/appointment_db", "root", "tiger");
 
-            // 🔍 Check if slot already booked
+            
             PreparedStatement checkStmt = conn.prepareStatement(
                 "SELECT * FROM appointments WHERE doctor_email = ? AND appointment_date = ? AND appointment_time = ?");
             checkStmt.setString(1, doctorEmail);
@@ -48,7 +48,7 @@ public class AppointmentServlet extends HttpServlet {
                 RequestDispatcher rd = request.getRequestDispatcher("bookAppointment.jsp");
                 rd.forward(request, response);
             } else {
-                // ✅ Slot available — proceed to insert and redirect to payment
+                
                 PreparedStatement insertStmt = conn.prepareStatement(
                     "INSERT INTO appointments (doctor_email, user_email, appointment_date, appointment_time, status) VALUES (?, ?, ?, ?, 'pending')");
                 insertStmt.setString(1, doctorEmail);
@@ -57,13 +57,13 @@ public class AppointmentServlet extends HttpServlet {
                 insertStmt.setString(4, time);
                 insertStmt.executeUpdate();
 
-                // ✅ Store session data for payment step
+                
                 session.setAttribute("pendingUserEmail", userEmail);
                 session.setAttribute("pendingDoctorEmail", doctorEmail);
                 session.setAttribute("pendingDate", date);
                 session.setAttribute("pendingTime", time);
 
-                // ✅ Redirect to payment.jsp
+               
                 response.sendRedirect("payment.jsp");
             }
 
